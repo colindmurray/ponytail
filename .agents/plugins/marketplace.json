@@ -1,15 +1,14 @@
 {
-  "name": "ponytail",
+  "name": "colin-ponytail",
   "interface": {
-    "displayName": "Ponytail"
+    "displayName": "Colin\u2019s Ponytail"
   },
   "plugins": [
     {
       "name": "ponytail",
       "source": {
-        "source": "url",
-        "url": "https://github.com/DietrichGebert/ponytail.git",
-        "ref": "main"
+        "source": "local",
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",

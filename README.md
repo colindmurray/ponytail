@@ -1,3 +1,5 @@
+> Colin’s fork: [installation and project-search integration](docs/colin-installation.md). Upstream: [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail).
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
