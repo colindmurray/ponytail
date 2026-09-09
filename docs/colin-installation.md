@@ -33,9 +33,10 @@ commands still work. Change the shared default in its managed source and run
 - `SessionStart`, including resume and compaction, loads Ponytail and the
   repository-search reminder.
 - `UserPromptSubmit` handles Ponytail mode commands and refreshes the search
-  reminder. For existing issue work, it also suggests updating meaningful context,
-  status, and blocker links when starting work and before reporting results.
-  Sessions with no issue or no meaningful change can skip that suggestion.
+  reminder. It also suggests keeping all affected issues current when starting
+  work and before reporting results: claim or accept work, file when warranted,
+  update context, status, and blocker links, and close verified fixes.
+  Sessions with nothing to track or update can skip that suggestion.
   Tool calls do not trigger either hook.
 - Subagents receive their assigned instructions; the plugin has no
   `SubagentStart` registration.

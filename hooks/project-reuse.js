@@ -11,11 +11,11 @@ code is already known. Reopen promising hits and their callers/tests in the
 target checkout before reuse, checking that their behavior and constraints fit.
 Name the reused pattern or the concrete mismatch that warrants new code.
 
-When the task calls for issue-tracker work, load issue-tracking and the project's
-adapter skill (cao-issue-tracker for CAO-backed projects) and follow that workflow.
-If already working on an issue, consider updating its context, status, and blocker
-links when starting work and before reporting results. Skip if nothing changed or
-no issue is involved; this nudge calls for no issue search or filing.
+For relevant tracker work, use issue-tracking and the project's adapter
+(cao-issue-tracker for CAO). At task start and before reporting results, consider
+keeping all affected issues current: claim/accept, file when warranted, update
+context/status and blocker links, and close verified fixes. Skip when nothing
+needs tracking or updating; immediate fixes need no new issue.
 Use qmd-document-search for quick lookup of relevant repository documentation,
 designs, and conventions, scoped to the project's receipt-bound collections.
 
