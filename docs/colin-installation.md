@@ -33,7 +33,10 @@ commands still work. Change the shared default in its managed source and run
 - `SessionStart`, including resume and compaction, loads Ponytail and the
   repository-search reminder.
 - `UserPromptSubmit` handles Ponytail mode commands and refreshes the search
-  reminder. Tool calls do not trigger either hook.
+  reminder. For existing issue work, it also suggests updating meaningful context,
+  status, and blocker links when starting work and before reporting results.
+  Sessions with no issue or no meaningful change can skip that suggestion.
+  Tool calls do not trigger either hook.
 - Subagents receive their assigned instructions; the plugin has no
   `SubagentStart` registration.
 
@@ -43,6 +46,10 @@ documentation lookup to QMD, and actual tracker operations to the issue-tracker
 skills. It performs no searches itself. Fixing an incidental problem immediately
 does not require searching or filing an issue. Ponytail’s `off` mode controls its
 simplification rules; the repository-search reminder remains available.
+
+The issue reminder is delivered with the prompt so the agent can act before its
+final response. There is no `Stop` hook: turn-ending feedback would resume the
+agent, adding a continuation to an otherwise complete turn.
 
 The reminder lives in `hooks/project-reuse.js`. Global instruction documents
 carry no copy. The native plugin hooks are the only registration for this
