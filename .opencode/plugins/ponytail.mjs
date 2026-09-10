@@ -21,6 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const { getPonytailInstructions } = require('../../hooks/ponytail-instructions');
 const { getDefaultMode, normalizePersistedMode } = require('../../hooks/ponytail-config');
+const { getProjectReuseContext } = require('../../hooks/project-reuse');
 const { parseCommandFile } = require('./ponytail-frontmatter.cjs');
 
 // OpenCode has no flag-file convention of its own; keep mode beside its config.
@@ -43,7 +44,7 @@ function writeMode(mode) {
   fs.writeFileSync(statePath, mode);
 }
 
-export default async ({ client } = {}) => {
+export default async ({ client, directory } = {}) => {
   const log = (level, message) => {
     try { client && client.app && client.app.log({ body: { service: 'ponytail', level, message } }); } catch (e) {}
   };
@@ -73,8 +74,11 @@ export default async ({ client } = {}) => {
     // Append the ruleset to the system prompt every turn.
     'experimental.chat.system.transform': async (_input, output) => {
       const mode = readMode();
-      if (mode === 'off') return;
-      const instructions = getPonytailInstructions(mode);
+      const instructions = [
+        mode === 'off' ? '' : getPonytailInstructions(mode),
+        getProjectReuseContext(directory),
+      ].filter(Boolean).join('\n\n');
+      if (!instructions) return;
       if (output.system.length > 0) {
         output.system[output.system.length - 1] += '\n\n' + instructions;
       } else {

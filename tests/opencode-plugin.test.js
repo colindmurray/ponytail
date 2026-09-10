@@ -84,6 +84,18 @@ test('unrelated commands do not touch the flag', async () => {
   assert.equal(fs.existsSync(statePath), false);
 });
 
+test('project reminder uses the host checkout and survives ponytail off', async () => {
+  const repo = path.join(tmp, 'checkout');
+  fs.mkdirSync(repo);
+  require('node:child_process').execFileSync('git', ['init', '-q', repo]);
+  const hooks = await loadPlugin({ directory: repo });
+  await hooks['command.execute.before']({ command: 'ponytail', arguments: 'off' });
+  const system = await transform(hooks);
+  assert.ok(system[0].includes(fs.realpathSync(repo)));
+  assert.match(system[0], /keeping all affected issues current/);
+  assert.doesNotMatch(system[0], /lazy senior developer/);
+});
+
 test('parseCommandFile reads frontmatter description + body, LF and CRLF', () => {
   const lf = path.join(tmp, 'cmd-lf.md');
   fs.writeFileSync(lf, '---\ndescription: do a thing\n---\n\nthe template body\n');

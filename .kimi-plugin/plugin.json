@@ -1,0 +1,13 @@
+{
+  "name": "ponytail",
+  "version": "4.9.2",
+  "description": "Ponytail with repository search and optional issue-tracker reminders.",
+  "skills": "./skills/",
+  "hooks": [
+    {
+      "event": "UserPromptSubmit",
+      "command": "node ./hooks/ponytail-prompt.js kimi",
+      "timeout": 3
+    }
+  ]
+}

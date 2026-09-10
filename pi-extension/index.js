@@ -14,6 +14,8 @@ const {
 } = require("../hooks/ponytail-config.js");
 const { getPonytailInstructions, filterSkillBodyForMode } = require("../hooks/ponytail-instructions.js");
 
+const { getProjectReuseContext } = require("../hooks/project-reuse.js");
+
 export { filterSkillBodyForMode };
 export const readDefaultMode = getDefaultMode;
 export const readQuietStartup = getQuietStartup;
@@ -201,11 +203,15 @@ export default function ponytailExtension(pi) {
     syncStatus(ctx);
   });
 
-  pi.on("before_agent_start", async (event) => {
-    if (!currentMode || currentMode === "off") return;
+  pi.on("before_agent_start", async (event, ctx) => {
+    const instructions = [
+      !currentMode || currentMode === "off" ? "" : getPonytailInstructions(currentMode),
+      getProjectReuseContext(ctx?.cwd),
+    ].filter(Boolean).join("\n\n");
+    if (!instructions) return;
     // Guard a null/undefined event or a missing systemPrompt: don't crash, and
     // don't prepend the literal string "undefined" to the prompt (#439, #440).
     const base = event?.systemPrompt ? `${event.systemPrompt}\n\n` : "";
-    return { systemPrompt: `${base}${getPonytailInstructions(currentMode)}` };
+    return { systemPrompt: `${base}${instructions}` };
   });
 }

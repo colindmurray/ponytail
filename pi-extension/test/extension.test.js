@@ -3,6 +3,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { execFileSync } from "node:child_process";
+import { realpathSync } from "node:fs";
 
 import ponytailExtension from "../index.js";
 
@@ -63,6 +65,21 @@ test("extension registers Ponytail commands", () => {
 
   assert.deepEqual([...commands.keys()].sort(), ["ponytail", "ponytail-audit", "ponytail-debt", "ponytail-gain", "ponytail-help", "ponytail-review"]);
 });
+
+test("project reminder reaches the host prompt even with ponytail off", async () => withTempConfig(async () => {
+  const repo = join(process.env.XDG_CONFIG_HOME, "checkout");
+  mkdirSync(repo);
+  execFileSync("git", ["init", "-q", repo]);
+  const { commands, events } = createPiHarness();
+  const ctx = createCommandContext({ cwd: repo });
+  await events.get("session_start")({}, ctx);
+  await commands.get("ponytail").handler("off", ctx);
+  const result = await events.get("before_agent_start")({ systemPrompt: "BASE" }, ctx);
+  assert.ok(result.systemPrompt.startsWith("BASE\n\n"));
+  assert.ok(result.systemPrompt.includes(realpathSync(repo)));
+  assert.match(result.systemPrompt, /keeping all affected issues current/);
+  assert.doesNotMatch(result.systemPrompt, /lazy senior developer/);
+}));
 
 test("/ponytail updates session mode and injects instructions", async () => withTempConfig(async () => {
   const { commands, events, appendedEntries } = createPiHarness();
