@@ -119,10 +119,18 @@ installed copies:
 
 ```sh
 claude plugin update ponytail@colin-ponytail
-codex plugin add ponytail@colin-ponytail
-codex-aether plugin add ponytail@colin-ponytail
+python3 scripts/update-codex.py
+CODEX_HOME="$HOME/.codex-account-2" python3 scripts/update-codex.py
+python3 tests/test_codex_update.py
 uv run --no-project --with pandas npm test
 ```
+
+The Codex updater preserves previous cached versions. Running CLI sessions keep
+absolute hook paths from startup; a plain `codex plugin add` can delete those
+files, producing two “Hook failed / hook exited with code 1” messages on every
+prompt. Existing sessions can continue using their original files while new
+sessions load the updated plugin. Restart or resume a session to load new hooks.
+Old versions may be removed once every session using them has exited.
 
 Review changed hook definitions in `/hooks` before starting new sessions.
 Repeat the Muse build/install and Kimi install steps to update their cached copies.

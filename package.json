@@ -34,7 +34,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "python3 tests/test_project_reuse_hook.py && node --test tests/*.test.js && npm test --prefix pi-extension && npm test --prefix ponytail-mcp"
+    "test": "python3 tests/test_project_reuse_hook.py && python3 tests/test_codex_update.py && node --test tests/*.test.js && npm test --prefix pi-extension && npm test --prefix ponytail-mcp"
   },
   "pi": {
     "extensions": ["./pi-extension/index.js"],
